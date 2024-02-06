@@ -11,7 +11,6 @@ conn = psycopg2.connect(
     port="5432"
 )
 
-# Створення курсора для виконання SQL запитів
 cur = conn.cursor()
 
 app = Flask(__name__)
