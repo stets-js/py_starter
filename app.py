@@ -34,6 +34,7 @@ def get_all_users():
             'password': user[2]
         }
         user_list.append(user_data)
+    cur.close()
     return jsonify(user_list)
 
 # Додати нового користувача
@@ -47,13 +48,14 @@ def add_user():
     cur.execute("SELECT * FROM users WHERE username = %s", (username,))
     existing_user = cur.fetchone()
     if existing_user:
+        cur.close()
         return jsonify({'error': 'User already exists'})
 
     # Додавання користувача, якщо його немає в базі
     sql = "INSERT INTO users (username, password) VALUES (%s, %s)"
     cur.execute(sql, (username, password))
     conn.commit()
-
+    cur.close()
     return jsonify({'message': 'User added successfully'})
 
 # Отримати інформацію про користувача за логіном
@@ -67,8 +69,10 @@ def get_user(username):
             'username': user[1],
             'password': user[2]
         }
+        cur.close()
         return jsonify(user_data)
     else:
+        cur.close()
         return jsonify({'error': 'User not found'})
 
 # Оновити інформацію про користувача за логіном
@@ -82,13 +86,14 @@ def update_user(username):
     cur.execute("SELECT * FROM users WHERE username = %s", (username,))
     existing_user = cur.fetchone()
     if not existing_user:
+        cur.close()
         return jsonify({'error': 'User not found'})
 
     # Оновлення інформації про користувача, якщо він існує
     sql = "UPDATE users SET username = %s, password = %s WHERE username = %s"
     cur.execute(sql, (new_username, new_password, username))
     conn.commit()
-
+    cur.close()
     return jsonify({'message': 'User updated successfully'})
 
 # Видалити користувача за логіном
@@ -98,13 +103,14 @@ def delete_user(username):
     cur.execute("SELECT * FROM users WHERE username = %s", (username,))
     existing_user = cur.fetchone()
     if not existing_user:
+        cur.close()
         return jsonify({'error': 'User not found'})
 
     # Видалення користувача, якщо він існує
     sql = "DELETE FROM users WHERE username = %s"
     cur.execute(sql, (username,))
     conn.commit()
-
+    cur.close()
     return jsonify({'message': 'User deleted successfully'})
 
 if __name__ == '__main__':
