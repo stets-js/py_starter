@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, request, jsonify
 import psycopg2
+from flask_cors import CORS
 
 # Підключення до бази даних
 conn = psycopg2.connect(
@@ -14,6 +15,7 @@ conn = psycopg2.connect(
 cur = conn.cursor()
 
 app = Flask(__name__)
+CORS(app, origind=['http://localhost:3000/'])
 
 @app.route('/')
 def index():
